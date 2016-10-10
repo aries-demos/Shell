@@ -3,7 +3,7 @@ clear
 if [[ $# -eq 0 ]]
 then
 # Define Variable reset_terminal
-reset_teminal=$(tput sgr0)
+reset_terminal=$(tput sgr0)
 
 # Check OS Type
 	os=$(uname -o)
@@ -33,6 +33,12 @@ reset_teminal=$(tput sgr0)
 	ping -c 2 www.baidu.com &>/dev/null && echo "Internet:Connected" || echo "Internet:Disconnected"
 # Check Logged In Users
 	who>/tmp/who
-	echo -e '\E[32m' "Logged In Users" && cat /tmp/who
+	echo -e '\E[32m' "Logged In Users" $reset_terminal && cat /tmp/who
 	rm -f /tmp/who
+
+##########################################################
+	system_mem_usages=$(awk '/MemTotal/{total=$2}/MemFree/{free=$2}END{print (total-free)/1024}' /proc/meminfo)
+	echo -e '\E[32m'" system memuserages " $reset_terminal $system_mem_usages
+	apps_mem_usages=$(awk '/MemTotal/{total=$2}/MemFree/{free=$2}/^Cached/{cached=$2}/Buffers/{buffers=$2}END{print (total-free-cached-buffers)/1024}' /proc/meminfo)
+	echo -e '\E[32m'" apps memuserages " $reset_terminal $apps_mem_usages
 fi
