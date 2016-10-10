@@ -42,4 +42,12 @@ reset_terminal=$(tput sgr0)
 	echo -e '\E[32m'" system memuserages " $reset_terminal $system_mem_usages
 	apps_mem_usages=$(awk '/MemTotal/{total=$2}/MemFree/{free=$2}/^Cached/{cached=$2}/Buffers/{buffers=$2}END{print (total-free-cached-buffers)/1024}' /proc/meminfo)
 	echo -e '\E[32m'" apps memuserages " $reset_terminal $apps_mem_usages
+
+	loadaverage=$(top -n 1 -b | grep "load average:" | awk '{print $10 $11 $12}')
+	echo -e '\E[32m'" load averages " $reset_terminal $loadaverage
+
+	#diskavege=$(df -hP|grep -vE 'Filesystem|tmpfs' | awk '{print $1 " " $5}')
+	df -hP|grep -vE 'tmpfs' >/tmp/diskavege
+	echo -e '\E[32m'" disk averages " $reset_terminal && cat /tmp/diskavege
+	rm -f /tmp/diskavege
 fi
