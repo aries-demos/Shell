@@ -9,8 +9,8 @@ reset_terminal=$(tput sgr0)
 	os=$(uname -o)
 	echo -e '\E[32m'"Operator System Type :" $reset_terminal $os
 # Check OS Release Version and Name
-	os_name=$(cat /etc/issue|grep -e "Server")
-	echo -e '\E[32m'"Operator System TypeCheck OS Release Version and Name:" $reset_terminal $os_name
+	os_name=$(cat /etc/os-release* | grep NAME)
+	echo -e '\E[32m'"Operator System TypeCheck OS Release Version and Name:\n" $reset_terminal $os_name
 # Check Architecture
 	architecture=$(uname -m)
 	echo -e '\E[32m'"Check Architecture:" $reset_terminal $architecture
@@ -30,7 +30,8 @@ reset_terminal=$(tput sgr0)
 	nameserver=$(cat /etc/resolv.conf | grep -E "\<nameserver[ ]+" | awk '{print $NF}')
 	echo -e '\E[32m'"Check DNS:" $reset_terminal $nameserver
 # Check if connected to Internet or not
-	ping -c 2 www.baidu.com &>/dev/null && echo "Internet:Connected" || echo "Internet:Disconnected"
+	ping -c 2 www.baidu.com &>/dev/null && 
+	echo "  Internet:Connected" || echo "  Internet:Disconnected"
 # Check Logged In Users
 	who>/tmp/who
 	echo -e '\E[32m' "Logged In Users" $reset_terminal && cat /tmp/who
